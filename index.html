@@ -2,24 +2,24 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#263126">
+  <meta name="theme-color" content="#1e2a21">
   <title>The Herbs Behind Nowhere’s End</title>
   <link rel="stylesheet" href="web/flipbook.css">
 </head>
 <body>
-  <main class="app" aria-label="Interactive apothecary herbarium">
-    <header class="masthead"><span>NOWHERE’S END · HERBARIUM</span><span class="edition">A FIELD GUIDE IN 24 LEAVES</span></header>
-    <section class="stage" aria-label="Page turning book">
-      <button class="nav prev" aria-label="Previous page" title="Previous page (←)">‹</button>
+  <main class="app" aria-label="Nowhere’s End herbarium">
+    <section id="stage" class="stage" aria-label="Landscape book">
       <div class="book-shell"><div id="book" class="book" aria-live="polite"></div></div>
-      <button class="nav next" aria-label="Next page" title="Next page (→)">›</button>
+      <button id="closedCover" class="closed-cover" type="button" aria-label="Open The Herbs Behind Nowhere’s End">
+        <span class="cover-spine" aria-hidden="true"></span>
+        <span class="cover-face" aria-hidden="true">
+          <span class="cover-copy">The Herbs Behind<br>Nowhere’s End</span>
+          <span class="cover-art-frame"><img src="assets/generated/cover.jpg" alt=""></span>
+        </span>
+      </button>
+      <button class="nav prev" aria-label="Previous page">‹</button>
+      <button class="nav next" aria-label="Next page">›</button>
     </section>
-    <footer class="controls">
-      <button id="first" class="text-button">First leaf</button>
-      <span id="counter" aria-label="Page number">Cover</span>
-      <button id="last" class="text-button">Last leaf</button>
-    </footer>
-    <p class="hint">Use ← →, swipe, or the page arrows · Select a label to view its TTB record</p>
   </main>
   <script type="module" src="web/flipbook.js"></script>
 </body>
