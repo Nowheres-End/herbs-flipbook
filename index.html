@@ -4,23 +4,21 @@
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#1e2a21">
   <title>The Herbs Behind Nowhere’s End</title>
+  <link rel="stylesheet" href="assets/vendor/page-flip.css">
   <link rel="stylesheet" href="web/flipbook.css">
 </head>
 <body>
-  <main class="app" aria-label="Nowhere’s End herbarium">
-    <section id="stage" class="stage" aria-label="Landscape book">
-      <div class="book-shell"><div id="book" class="book" aria-live="polite"></div></div>
-      <button id="closedCover" class="closed-cover" type="button" aria-label="Open The Herbs Behind Nowhere’s End">
-        <span class="cover-spine" aria-hidden="true"></span>
-        <span class="cover-face" aria-hidden="true">
-          <span class="cover-copy">The Herbs Behind<br>Nowhere’s End</span>
-          <span class="cover-art-frame"><img src="assets/generated/cover.jpg" alt=""></span>
-        </span>
-      </button>
-      <button class="nav prev" aria-label="Previous page">‹</button>
-      <button class="nav next" aria-label="Next page">›</button>
-    </section>
+  <main id="stage" class="stage" aria-label="Nowhere’s End apothecary book">
+    <div id="book" class="book" aria-label="Two-page herbarium"></div>
+    <button id="closedCover" class="closed-cover" type="button" aria-label="Open The Herbs Behind Nowhere’s End">
+      <span class="cover-spine" aria-hidden="true"></span>
+      <span class="cover-face" aria-hidden="true">
+        <span class="cover-title">The Herbs Behind<br>Nowhere’s End</span>
+        <span class="cover-art-frame"><img src="assets/generated/cover.jpg" alt=""></span>
+      </span>
+    </button>
   </main>
-  <script type="module" src="web/flipbook.js"></script>
+  <script src="assets/vendor/page-flip.browser.js"></script>
+  <script src="web/flipbook.js"></script>
 </body>
 </html>

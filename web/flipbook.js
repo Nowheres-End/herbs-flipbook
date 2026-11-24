@@ -1,14 +1,13 @@
-const data = await fetch('data/herbs.json').then(r=>{if(!r.ok)throw new Error('Unable to load herb data');return r.json()});
-const book=document.querySelector('#book'),stage=document.querySelector('#stage'),cover=document.querySelector('#closedCover');
-const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const labelFiles={verte:'verte',rouge:'rouge',detour:'detour',bleue:'bleue'};
-function herb(h){const labels=h.blend_labels.map(l=>`<a class="label-link" href="${esc(l.ttb_url)}" target="_blank" rel="noopener"><img src="assets/ttb-labels/${labelFiles[l.blend]}.webp" alt="${esc(l.label_name)} TTB label"><span>${esc(l.label_name)}</span></a>`).join('');return `<article class="page"><div class="herb-copy"><h2>${esc(h.title)}</h2><div class="latin">${esc(h.latin)}</div><div class="section-title">TRADITIONAL &amp; HISTORICAL USE</div><p class="summary">${esc(h.traditional_use_summary)}</p><p class="warning">Historical descriptions only; not evidence of treatment or a recommendation for use.</p></div><img class="plate" src="${esc(h.image_file)}" alt="${esc(h.title)} botanical plate"><div class="bottom-row"><a class="qr-link" href="${esc(h.organism_url)}" target="_blank" rel="noopener" aria-label="Terpedia organism record for ${esc(h.title)}"><img class="qr" src="assets/qr/${esc(h.slug)}.png" alt="QR code"></a><div class="labels">${labels}</div></div></article>`}
-book.innerHTML=data.botanicals.map(herb).join('');
-const pages=[...book.children];let current=0,busy=false,opened=false;
-pages.forEach((p,i)=>{p.style.zIndex=String(pages.length-i);p.setAttribute('aria-label',`Herb ${i+1} of ${pages.length}`)});
-function update(){document.querySelector('.prev').disabled=!opened||current===0;document.querySelector('.next').disabled=!opened||current===pages.length-1}
-function openBook(){if(opened)return;opened=true;stage.classList.add('is-open');cover.setAttribute('aria-hidden','true');setTimeout(()=>document.querySelector('.next').focus(),1200);update()}
-function turn(next){if(!opened||busy||next<0||next>=pages.length||next===current)return;busy=true;if(next>current){for(let i=current;i<next;i++)pages[i].classList.add('flipped')}else{for(let i=current-1;i>=next;i--)pages[i].classList.remove('flipped')}current=next;update();setTimeout(()=>busy=false,900)}
-cover.addEventListener('click',openBook);document.querySelector('.prev').addEventListener('click',()=>turn(current-1));document.querySelector('.next').addEventListener('click',()=>turn(current+1));
-window.addEventListener('keydown',e=>{if(!opened&&['Enter',' ','ArrowRight','PageDown'].includes(e.key)){e.preventDefault();openBook();return}if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();turn(current+1)}if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();turn(current-1)}});
-let startX=0;book.addEventListener('touchstart',e=>startX=e.changedTouches[0].clientX,{passive:true});book.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-startX;if(Math.abs(dx)>45)turn(current+(dx<0?1:-1))},{passive:true});update();
+(async()=>{
+ const response=await fetch('data/herbs.json');if(!response.ok)throw new Error('Unable to load herb data');const data=await response.json();
+ const book=document.querySelector('#book');
+ const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const labelFiles={verte:'verte',rouge:'rouge',detour:'detour',bleue:'bleue'};
+ const pages=data.botanicals.map(h=>{const labels=h.blend_labels.map(l=>`<a class="blend-link" href="${esc(l.ttb_url)}" target="_blank" rel="noopener"><img src="assets/ttb-labels/${labelFiles[l.blend]}.webp" alt=""><span>${esc(l.label_name)}</span></a>`).join('');return `<article class="flip-page herb-page"><h2 class="herb-name">${esc(h.title)}</h2><p class="herb-latin">${esc(h.latin)}</p><img class="herb-art" src="${esc(h.image_file)}" alt="${esc(h.title)} botanical plate"><h3 class="traditional-heading">TRADITIONAL &amp; HISTORICAL USE</h3><p class="traditional-copy">${esc(h.traditional_use_summary)}</p><p class="caution">Historical descriptions only; not evidence of treatment or a recommendation for use.</p><div class="page-links"><a class="qr-link" href="${esc(h.organism_url)}" target="_blank" rel="noopener" aria-label="Terpedia organism record for ${esc(h.title)}"><img class="qr" src="assets/qr/${esc(h.slug)}.png" alt="QR code"></a><div class="blend-links">${labels}</div></div></article>`});
+ book.innerHTML=pages.join('');
+ const pageFlip=new St.PageFlip(book,{width:640,height:720,size:'stretch',minWidth:320,maxWidth:640,minHeight:360,maxHeight:720,drawShadow:true,flippingTime:1100,usePortrait:false,startPage:0,autoSize:false,maxShadowOpacity:.3,showCover:false,mobileScrollSupport:false,swipeDistance:24,clickEventForward:true,useMouseEvents:true,disableFlipByClick:false});
+ pageFlip.loadFromHTML(book.querySelectorAll('.flip-page'));
+ const stage=document.querySelector('#stage'),closedCover=document.querySelector('#closedCover');
+ closedCover.addEventListener('click',()=>{stage.classList.add('is-open');closedCover.setAttribute('aria-hidden','true');setTimeout(()=>closedCover.setAttribute('hidden',''),1300)});
+ window.addEventListener('keydown',event=>{if(['ArrowRight','PageDown'].includes(event.key)){event.preventDefault();pageFlip.flipNext('bottom')}if(['ArrowLeft','PageUp'].includes(event.key)){event.preventDefault();pageFlip.flipPrev('bottom')}});
+})();
